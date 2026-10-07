@@ -96,10 +96,20 @@
 
         function playnote3(someContext, frequency, duration) {
         const osc1 = new OscillatorNode(someContext);
+        const osc2 = new OscillatorNode(someContext);
+        const osc3 = new OscillatorNode(someContext);
         const gain = new GainNode(someContext);
         osc1.connect(gain).connect(someContext.destination);
+        osc2.connect(gain).connect(someContext.destination);
+        osc3.connect(gain).connect(someContext.destination);
+
         osc1.frequency.value = frequency;
+        osc2.frequency.value = frequency*2.5;
+        osc3.frequency.value = frequency*1.004;
+
         osc1.type = "triangle";
+        osc2.type = "triangle";
+        osc3.type = "triangle";
 
         let now = someContext.currentTime;
          gain.gain.value = 0.001;
@@ -110,6 +120,12 @@
 
         osc1.start();
         osc1.stop(now+duration);
+
+        osc2.start();
+        osc2.stop(now+duration);
+
+        osc3.start();
+        osc3.stop(now+duration);
         }
         
         // 1. Define the array of choices
