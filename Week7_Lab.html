@@ -14,6 +14,9 @@
     <button id = "Pick_Play2">Pick and Play 2</button>
     <div id="result2">Click the button to start!</div>
 
+    <button id = "Pick_Play3">Pick and Play 3</button>
+    <div id = "result3">Click the button to start!</div>
+
     <script>
             
              const myCtx = new AudioContext();
@@ -27,10 +30,10 @@
         
             
             osc1.frequency.value = frequency;
-            osc2.frequency.value = frequency*0.99;
-            osc3.frequency.value = frequency*1.01;
-            osc1.type = "triangle"
-            osc2.type = "triangle"
+            osc2.frequency.value = frequency*2.99;
+            osc3.frequency.value = frequency*2.01;
+            osc1.type = "sine"
+            osc2.type = "sine"
             osc3.type = "sine"
             gain.gain.value = 0;
 
@@ -40,8 +43,8 @@
 
             let now = someContext.currentTime;
 
-            gain.gain.linearRampToValueAtTime(0.25, now + 0.01); //attack
-            gain.gain.linearRampToValueAtTime(0.10, now + 0.01 + 0.2);
+            gain.gain.linearRampToValueAtTime(0.4, now + duration*0.2); //attack
+            gain.gain.linearRampToValueAtTime(0.2, now + duration*0.4);
             gain.gain.linearRampToValueAtTime(0, now + duration); //release
 
             osc1.start();
@@ -59,19 +62,23 @@
         {
             const osc1 = new OscillatorNode(someContext);
             const osc2 = new OscillatorNode(someContext);
+            const osc3 = new OscillatorNode(someContext);
 
             const gain = new GainNode(someContext);
             osc1.connect(gain).connect(someContext.destination);
             osc2.connect(gain).connect(someContext.destination);
+            osc3.connect(gain).connect(someContext.destination);
             osc1.frequency.value = frequency;
-            osc2.frequency.value = frequency*3.001;
-            osc1.type = "sawtooth";
-            osc2.type = "sawtooth";
+            osc2.frequency.value = frequency*2.68;
+            osc3.frequency.value = frequency*1.33;
+            osc1.type = "square";
+            osc2.type = "triangle";
+            osc3.type = "triangle";
 
             let now = someContext.currentTime;
 
-            gain.gain.linearRampToValueAtTime(0.7, now + (duration*0.25));
-            gain.gain.linearRampToValueAtTime(0.5, now + (duration*0.15));
+            gain.gain.linearRampToValueAtTime(0.5, now + 0.015);
+            gain.gain.linearRampToValueAtTime(0.2, now + 0.25);
             gain.gain.linearRampToValueAtTime(0, now + duration);
 
             osc1.start();
@@ -80,6 +87,27 @@
             osc2.start();
             osc2.stop(now+duration);
 
+            osc3.start();
+            osc3.stop(now+duration);
+
+
+        }
+
+        function playnote3(someContext, frequency, duration) {
+        const osc1 = new OscillatorNode(someContext);
+        const gain = new GainNode(someContext);
+        osc1.connect(gain).connect(someContext.destination);
+        osc1.frequency.value = frequency;
+        osc1.type = "triangle";
+
+        let now = someContext.currentTime;
+
+            gain.gain.linearRampToValueAtTime(0.5, now + duration*0.1);
+            gain.gain.linearRampToValueAtTime(0.2, now + duration*0.25);
+            gain.gain.linearRampToValueAtTime(0, now + duration);
+
+        osc1.start;
+        osc1.stop(now+duration);
         }
         
         // 1. Define the array of choices
@@ -100,7 +128,12 @@
             let newFreq = 440 * 2 **((randomMidiNote - 69)/12);
             return newFreq;
         }
-
+        const midiPitches3 = [60, 64, 68, 72, 76, 80]
+        const randomPitch3 = function() {
+            let randomMidiNote = midiPitches3[Math.floor(Math.random()* midiPitches3.length)];
+            let newFreq = 440 * 2 **((randomMidiNote - 69)/12);
+            return newFreq;
+        }
         // 3. Set up references to the HTML elements
         const button = document.getElementById("Pick_Play_Button");
         const resultDisplay = document.getElementById("result");
@@ -120,10 +153,20 @@
 
         button2.addEventListener("click", function() {
             const randomChoice = randomPitch2(midiPitches2);
-            resultDisplay.textContent = randomChoice;
-            document.querySelector("#Pick_Play2").onclick = () => playnote2(myCtx, randomPitch2(), 0.25)
+            resultDisplay2.textContent = randomChoice;
+            document.querySelector("#Pick_Play2").onclick = () => playnote2(myCtx, randomPitch2(), 1)
 
         });
+
+        const button3 = document.getElementById("Pick_Play3");
+        const resultDisplay3 = document.getElementById("result3");
+
+        button3.addEventListener("click", function(){
+            const randomChoice = randomPitch3(midiPitches3);
+            resultDisplay3.textContent = randomChoice;
+            document.querySelector("#Pick_Play3").onclick = () => playnote3(myCtx, randomPitch3(), 4)
+        });
+
     </script>
 
 </body>
