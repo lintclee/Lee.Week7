@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8">
+        <title> LFO Time </title>
+    </head>
+    <body>
+<button id = "start">Start</button>
+<button id = "stop">Stop</button>
+<script>
+    
+    const ctx = new AudioContext();
+
+    const Osc1 = new OscillatorNode(ctx);
+    Osc1.type = "square";
+    Osc1.frequency.value = 55;
+
+    const LPFilter = new BiquadFilterNode(ctx);
+    LPFilter.type = "lowpass";
+    LPFilter.frequency = "300";
+    LPFilter.Q = 4;
+
+    const LFO = new OscillatorNode(ctx);
+    LFO.type = "sine";
+    LFO.frequency.value = 4;
+
+    const LFODepth = ctx.createGain();
+    LFODepth.gain.setValueAtTime(500, ctx.currentTime); //Modulates the cutoff by +-50
+
+    LFO.connect(LFODepth);
+    LFODepth.connect(LPFilter.frequency);
+
+    Osc1.connect(LPFilter);
+    LPFilter.connect(ctx.destination);
+
+
+    function Startsound() {
+    Osc1.start();
+    LFO.start();
+    }
+    function Stopsound() {
+        Osc1.stop();
+        LFO.stop();
+    }
+
+    document.querySelector("#start").onclick = () => Startsound();
+    document.querySelector("#stop").onclick = () => Stopsound();
+
+
+
+</script>
+    </body>
+</html>
