@@ -20,6 +20,12 @@
     <script>
             
              const myCtx = new AudioContext();
+
+        const waveArray = ["sine", "sawtooth", "square", "triangle"]
+        const randomWave = function() {
+            let randWaveform = waveArray[Math.floor(Math.random() * waveArray.length)];
+            return randWaveform;
+        }
             
             function playNote(someContext, frequency, duration)
         {
@@ -31,10 +37,10 @@
             
             osc1.frequency.value = frequency;
             osc2.frequency.value = frequency*1.999;
-            osc3.frequency.value = frequency*1.01;
-            osc1.type = "sawtooth";
-            osc2.type = "sine";
-            osc3.type = "sine";
+            osc3.frequency.value = frequency*2.01;
+            osc1.type = randomWave();
+            osc2.type = randomWave();
+            osc3.type = randomWave();
             gain.gain.value = 0.001;
 
             osc1.connect(gain).connect(someContext.destination);
@@ -73,7 +79,7 @@
             osc3.frequency.value = frequency*1.33;
             osc1.type = "square";
             osc2.type = "triangle";
-            osc3.type = "triangle";
+            osc3.type = randomWave();
 
             let now = someContext.currentTime;
            gain.gain.value = 0.001;
@@ -108,7 +114,7 @@
         osc3.frequency.value = frequency*1.004;
 
         osc1.type = "triangle";
-        osc2.type = "triangle";
+        osc2.type = randomWave();
         osc3.type = "triangle";
 
         let now = someContext.currentTime;
@@ -139,6 +145,21 @@
 
             return newFreq;
         }
+        //random durs
+
+        const durArray = [0.125, 0.25, 0.5, 0.75, 1, 1.5]
+        const randomDuration = function() {
+            let randNoteLength = durArray[Math.floor(Math.random() * durArray.length)];
+            return randNoteLength;
+        }
+        
+        const durArray2 = [0.5, 0.75, 1, 1.5, 2]
+        const randomDuration2 = function() {
+            let randNoteLength = durArray2[Math.floor(Math.random() * durArray2.length)];
+            return randNoteLength;
+        }
+
+
 
         const midiPitches2 = [60, 62, 63, 65, 66, 68, 69, 71, 72];
         const randomPitch2 =function() {
@@ -163,7 +184,7 @@
             const randomChoice = randomPitch(midiPitches);
             resultDisplay.textContent = randomChoice;
 
-            document.querySelector("#Pick_Play_Button").onclick = () => playNote(myCtx, randomPitch(), 0.5);
+            document.querySelector("#Pick_Play_Button").onclick = () => playNote(myCtx, randomPitch(), 0.8);
         });
 
         const button2 = document.getElementById("Pick_Play2");
@@ -172,7 +193,7 @@
         button2.addEventListener("click", function() {
             const randomChoice = randomPitch2(midiPitches2);
             resultDisplay2.textContent = randomChoice;
-            document.querySelector("#Pick_Play2").onclick = () => playnote2(myCtx, randomPitch2(), 0.7)
+            document.querySelector("#Pick_Play2").onclick = () => playnote2(myCtx, randomPitch2(), randomDuration())
 
         });
 
@@ -182,7 +203,7 @@
         button3.addEventListener("click", function() {
             const randomChoice = randomPitch3(midiPitches3);
             resultDisplay3.textContent = randomChoice;
-            document.querySelector("#Pick_Play3").onclick = () => playnote3(myCtx, randomPitch3(), 2)
+            document.querySelector("#Pick_Play3").onclick = () => playnote3(myCtx, randomPitch3(), randomDuration2())
         });
 
     </script>
